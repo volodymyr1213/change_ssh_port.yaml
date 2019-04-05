@@ -29,7 +29,7 @@
         - ssh_port is defined 
         - ssh_port.state is undefined
 
-    - name: Set SSH port to 22
+    - name: Set SSH port to 8875
       set_fact:
-        ansible_port: "22"
+        ansible_port: "8875"
       when: ssh_port_default.state is defined
