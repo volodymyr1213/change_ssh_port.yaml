@@ -1,39 +1,24 @@
 ---
-- name: Determine SSH port
-  hosts: Centos
-  gather_facts: no
+- name: ssh-port changing
+  hosts: all
+  #gather_facts: no
   remote_user: root
   tasks:
-    - name: Check port ansible port 
-      wait_for:
-        port: 22 
-        state: "started"
-        host: Centos
-        connect_timeout: 5
-        timeout: 5
-      delegate_to: "localhost"
-      ignore_errors: "no"
-      register: ssh_port
+  - name: Setup alternate SSH port
+    lineinfile:
+      dest: "/etc/ssh/sshd_config"
+      regexp: "^Port"
+      line: "Port 8875"
+   # notify: "Restart sshd"
 
-    - name: Check port 22
-      wait_for:
-        port: 22
-        state: "started"
-        host: Centos 
-        connect_timeout: 5
-        timeout: 5
-      delegate_to: Centos
-      ignore_errors: "yes"
-      register: ssh_port_default
-      when: 
-        - ssh_port is defined 
-        - ssh_port.state is undefined
+  - name: Setup selinux for alternate SSH port
+    seport:
+      ports: "8875"
+      proto: "tcp"
+      setype: "ssh_port_t"
+      state: "present"
 
-    - name: Set SSH port to 8875
-      set_fact:
-       ansible_port: 8875
-      when: ssh_port_default.state is defined
-    
-    - name: Set SSH port to 8875
-        set_fact:
-          ansible_port: 8875
+  - name: Restart sshd
+    service:
+      name: sshd
+      state: restarted
