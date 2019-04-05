@@ -12,7 +12,7 @@
         connect_timeout: 5
         timeout: 5
       delegate_to: "localhost"
-      ignore_errors: "yes"
+      ignore_errors: "no"
       register: ssh_port
 
     - name: Check port 22
@@ -33,3 +33,7 @@
       set_fact:
        ansible_port: 8875
       when: ssh_port_default.state is defined
+    
+    - name: Set SSH port to 8875
+        set_fact:
+          ansible_port: 8875

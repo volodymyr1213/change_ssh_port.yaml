@@ -1,0 +1,15 @@
+---
+- name:  My security group
+  ec2_group:
+    name: "{{ name }}"
+    description: sg with rule descriptions
+    vpc_id: vpc-d087afb6
+    profile: "{{ aws_profile }}"
+    region: eu-west-1b
+    rules:
+      - proto: tcp
+        ports:
+        - 80
+        - 22
+        cidr_ip: 0.0.0.0/0
+        rule_desc: allow all on port 80
