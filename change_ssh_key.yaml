@@ -1,6 +1,6 @@
 ---
 - name: Determine SSH port
-  hosts: all
+  hosts: Centos 
   gather_facts: no
   remote_user: root
   tasks:
@@ -22,7 +22,7 @@
         host: "{{ inventory_hostname }}"
         connect_timeout: "5"
         timeout: "5"
-      delegate_to: "localhost"
+      delegate_to: "Centos"
       ignore_errors: "yes"
       register: ssh_port_default
       when: 
